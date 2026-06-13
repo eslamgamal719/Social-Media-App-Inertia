@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@inertiajs/react": "^3.3.1",
-        "@inertiajs/vite": "^3.3.1"
+        "@inertiajs/vite": "^3.3.1",
+        "clsx": "^2.1.1"
     }
 }
