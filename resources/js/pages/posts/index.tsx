@@ -1,3 +1,4 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
 import { Link } from "@inertiajs/react";
 
@@ -16,17 +17,22 @@ export default function postsIndex({ posts }: PostsIndexProps) {
                     </div>
                 ) : (
                     posts.map((post) => (
-                        <article key={post.id} className="border-b border-gray-200 pb-6 last:border-b-0">
-                            <h2 className="text-xl font-semibold mb-2">
-                                <Link href={`/posts/${post.id}`}>
-                                    {post.title}
-                                </Link>
-                            </h2>
-                            <p className="text-gray-600">
-                                {post.body.substring(0, 200)}
-                                {post.body.length > 200 && "..."}
-                            </p>
-                        </article>
+                        <Card key={post.id} className="rounded-none border-b-0 last:border-b">
+                            <CardHeader>
+                                <CardTitle>
+                                    <Link href={`/posts/${post.id}`}>
+                                        {post.title}
+                                    </Link>
+                                </CardTitle>
+                                <CardDescription>By {post.user.name}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-gray-600">
+                                    {post.body.substring(0, 200)}
+                                    {post.body.length > 200 && "..."}
+                                </p>
+                            </CardContent>
+                        </Card>
                     ))
                 )}
             </div>
