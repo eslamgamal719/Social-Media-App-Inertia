@@ -1,5 +1,9 @@
+import { InputError } from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import AppLayout from "@/layouts/app-layout";
 import { cn } from "@/lib/utils";
 import { Form } from "@inertiajs/react";
@@ -17,42 +21,28 @@ export default function PostsCreate() {
                     <Form action="/posts" method="post" className="space-y-4">
                         {({ errors }) => (
                             <>
-                                <div>
-                                    <label htmlFor="title" className="block mb-1">
+                                <div className="space-y-1">
+                                    <Label htmlFor="title">
                                         Title
-                                    </label>
-                                    <input
+                                    </Label>
+                                    <Input
                                         id="title"
                                         name="title"
                                         type="text"
-                                        className={cn(
-                                            "w-full border rounded px-3 py-2",
-                                            errors.title && "border-red-500"
-                                        )}
+                                        aria-invalid={!!errors.title}
                                     />
-                                    {errors.title && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.title}
-                                        </p>
-                                    )}
+                                    <InputError message={errors.title} />
                                 </div>
-                                <div>
-                                    <label htmlFor="body" className="block mb-1">
+                                <div className="space-y-1">
+                                    <Label htmlFor="body">
                                         Body
-                                    </label>
-                                    <textarea
+                                    </Label>
+                                    <Textarea
                                         id="body"
                                         name="body"
-                                        className={cn(
-                                            "w-full border rounded px-3 py-2",
-                                            errors.body && "border-red-500"
-                                        )}
+                                        aria-invalid={!!errors.body}
                                     />
-                                    {errors.body && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.body}
-                                        </p>
-                                    )}
+                                    <InputError message={errors.body} />
                                 </div>
                                 <Button>Create</Button>
                             </>
