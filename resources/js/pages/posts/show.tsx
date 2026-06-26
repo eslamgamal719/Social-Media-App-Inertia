@@ -1,5 +1,6 @@
 import CommentCard from "@/components/comment-card";
 import CommentForm from "@/components/comment-form";
+import CommentList from "@/components/comment-list";
 import {
     Card,
     CardContent,
@@ -8,13 +9,61 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
-import { Post } from "@/types";
+import { Comment, Post } from "@/types";
+import { Deferred, usePoll } from "@inertiajs/react";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 interface PostsShowProps {
     post: Post;
+    comments: Comment[];
 }
 
-export default function postsShow({ post }: PostsShowProps) {
+export default function postsShow({ post, comments }: PostsShowProps) {
+    const commentsSectionRef = useRef<HTMLDivElement>(null);
+    const commentsCountRef = useRef(comments?.length ?? 0);
+    const iAmWritingCommentRef = useRef(false);
+
+    usePoll(3_000, {
+        only: ["comments"],
+    });
+
+    const scrollToComments = () => {
+        commentsSectionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    };
+
+    useEffect(() => {
+        // current length of comments
+        const newCommentsCount = comments?.length ?? 0;
+        // we have stored the previous length in commentsCountRef
+        // compare them and show a toast if different
+        if (
+            newCommentsCount > commentsCountRef.current &&
+            commentsCountRef.current > 0 &&
+            !iAmWritingCommentRef.current
+        ) {
+            console.log(iAmWritingCommentRef.current);
+            toast("New comment added!", {
+                duration: 6_000,
+                action: {
+                    label: "View Comments",
+                    onClick: scrollToComments,
+                },
+            });
+        }
+        // update the commentsCountRef to the current length of comments
+        commentsCountRef.current = newCommentsCount;
+        iAmWritingCommentRef.current = false;
+    }, [comments]);
+
+    const handleCommentAdded = () => {
+        iAmWritingCommentRef.current = true;
+        toast("Comment added successfully !", { position: "top-right" });
+    };
+
     return (
         <AppLayout>
             <div className="space-y-6">
@@ -31,23 +80,18 @@ export default function postsShow({ post }: PostsShowProps) {
                     </CardContent>
                 </Card>
 
-                <CommentForm postId={post.id} />
+                <CommentForm
+                    postId={post.id}
+                    onCommentAdded={handleCommentAdded}
+                />
 
-                <div className="space-y-4">
-                    {post.comments && post.comments.length > 0 ? (
-                        <div>
-                            {post.comments.map((comment) => (
-                                <CommentCard
-                                    key={comment.id}
-                                    comment={comment}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-8">
-                            <p className="text-gray-500">No comments yet.</p>
-                        </div>
-                    )}
+                <div ref={commentsSectionRef}>
+                    <Deferred
+                        data="comments"
+                        fallback={<CommentList comments={comments} />}
+                    >
+                        <CommentList comments={comments} />
+                    </Deferred>
                 </div>
             </div>
         </AppLayout>
