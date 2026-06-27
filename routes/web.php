@@ -7,11 +7,11 @@ use App\Http\Controllers\CommentController;
 
 Route::get('/', function () {
     return Inertia::render('home');
-});
+})->name('home.index');
 
 Route::get('/about', function () {
     return Inertia::render('about');
-});
+})->name('about.index');
 
 //Posts
 Route::get('/posts/create', [PostController::class, 'create']);
