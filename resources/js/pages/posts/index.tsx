@@ -1,9 +1,16 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
 import { Link } from "@inertiajs/react";
+import { Heart } from "lucide-react";
 
 interface PostsIndexProps {
-    posts: Post[]
+    posts: Post[];
 }
 
 export default function postsIndex({ posts }: PostsIndexProps) {
@@ -17,20 +24,29 @@ export default function postsIndex({ posts }: PostsIndexProps) {
                     </div>
                 ) : (
                     posts.map((post) => (
-                        <Card key={post.id} className="rounded-none border-b-0 last:border-b">
+                        <Card
+                            key={post.id}
+                            className="rounded-none border-b-0 last:border-b"
+                        >
                             <CardHeader>
                                 <CardTitle>
                                     <Link href={`/posts/${post.id}`}>
                                         {post.title}
                                     </Link>
                                 </CardTitle>
-                                <CardDescription>By {post.user.name}</CardDescription>
+                                <CardDescription>
+                                    By {post.user?.name}
+                                </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <p className="text-gray-600">
+                            <CardContent className="space-y-4">
+                                <p>
                                     {post.body.substring(0, 200)}
                                     {post.body.length > 200 && "..."}
                                 </p>
+                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                                    <Heart size={16} className="text-red-400" />
+                                    <span>{post.likes_count ?? 0} likes</span>
+                                </div>
                             </CardContent>
                         </Card>
                     ))

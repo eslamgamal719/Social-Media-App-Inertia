@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostToggleLike;
 use App\Http\Controllers\CommentController;
 
 Route::get('/', function () {
@@ -12,6 +13,8 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return Inertia::render('about');
 })->name('about.index');
+
+Route::post('/posts/{post}/likes/toggle', PostToggleLike::class);
 
 //Posts
 Route::get('/posts/create', [PostController::class, 'create']);
